@@ -31,6 +31,7 @@ Copy data from s3 bucket to local file system:
 ```
 
 Registry an AWS instance to load balancer:
+
 ```
 #!/bin/bash
 AWS_CONFIG_ENV=/root/.aws/envvars
