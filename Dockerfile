@@ -5,6 +5,6 @@
 FROM dockerfile/python
 MAINTAINER Xueshan Feng <sfeng@stanford.edu>
 
-RUN pip install awscli s3cmd
+RUN pip install --upgrade awscli s3cmd
 
 VOLUME /apps
