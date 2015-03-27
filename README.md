@@ -41,7 +41,7 @@ IMAGE=xueshanf/awscli:latest
 CMD="aws elb register-instances-with-load-balancer \
     --load-balancer-name <elb name>  --instances $INSTANCE "
 
-# pull the IMAGE if not loaded
+#Pull the IMAGE if not loaded
 docker history $IMAGE > /dev/null 2>&1 || docker pull $IMAGE
 docker run --rm --env-file=$AWS_CONFIG_ENV $IMAGE /bin/bash -c "$CMD"
 ```
