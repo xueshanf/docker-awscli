@@ -6,7 +6,7 @@ A container to run awcli and s3cmd.
 Examples
 ========
 
-Rebuld images. This will upgrade the packages:
+Rebuld image. This will upgrade the package:
 
 ```
 core@n1 docker build -t xueshanf/awscli:latest .
