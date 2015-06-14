@@ -2,9 +2,17 @@
 # To run: docker run -it <namespace>/awscli
 # cd /apps; aws s3 command
 
-FROM dockerfile/python
+FROM gliderlabs/alpine:3.1
 MAINTAINER Xueshan Feng <sfeng@stanford.edu>
 
-RUN pip install --upgrade awscli s3cmd
+RUN apk --update add \
+      python \
+      py-pip \
+      jq \
+      curl \
+      bash &&\
+      pip install --upgrade awscli s3cmd && \
+      mkdir /root/.aws
 
+# Expose data volume
 VOLUME /apps
