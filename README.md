@@ -20,20 +20,31 @@ core@n1 docker build -t xueshanf/awscli:latest .
 ```
 This repo triggers auto-build and push images to dockerhub.com/u/xueshanf/awscli.
 
-Readymade tools:
+Ready-made tools:
 
 ```
-docker run --rm  xueshanf/awscli get-metadata help
-```
-```
-docker run --rm  xueshanf/awscli get-metadata instanceid
+core@n1 docker run --rm  xueshanf/awscli get-metadata help
+Usage: get-metadata <argument>
+ACCOUNT
+HOSTNAME
+INSTANCEID
+PRIVATEIP
+PUBLICIP
+ROLE
+STSCRED
+STSTOKEN
+STSKEY
+SECRET
+ZONE
 
+core@n1 docker run --rm  xueshanf/awscli get-metadata instanceid
+i-453266b2
 ```
 
 Copy data from s3 bucket to local file system:
 
 ```
-/usr/bin/docker run --rm -v /var/apps:/apps xueshanf/awscli:latest aws s3 cp --recursive s3://<bucket>/apps/nginx/ /apps/nginx
+core@n1 /usr/bin/docker run --rm -v /var/apps:/apps xueshanf/awscli:latest aws s3 cp s3://<bucket>/apps/nginx/ /apps/nginx
 ```
 
 Registry an AWS instance to load balancer:

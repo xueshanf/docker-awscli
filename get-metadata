@@ -3,7 +3,6 @@
 # Retrieve the instance_id, and iam-role
 
 info=${1^^}
-echo $info
 meta_data_url=http://169.254.169.254/latest/meta-data/
 roleProfile=$(curl -s http://169.254.169.254/latest/meta-data/iam/info | grep -Eo 'instance-profile/([a-zA-Z.-]+)' | sed  's#instance-profile/##')
 
@@ -22,7 +21,7 @@ case $info in
     HOSTNAME)
         result=$(curl -s http://169.254.169.254/latest/meta-data/public-hostname)
         ;;
-    ID)
+    ID|INSTANCEID)
         result=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
         ;;
     PRIVATEIP)
