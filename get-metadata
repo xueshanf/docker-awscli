@@ -16,14 +16,14 @@ get_sts_value() {
 }
 
 case $info in
-    ID)
-        result=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
-        ;;
-    ROLE)
-        result=$roleProfile
+    ACCOUNT)
+        result=$(url -s http://169.254.169.254/latest/dynamic/instance-identity/document | jq .accountId | sed 's/"//g')
         ;;
     HOSTNAME)
         result=$(curl -s http://169.254.169.254/latest/meta-data/public-hostname)
+        ;;
+    ID)
+        result=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
         ;;
     PRIVATEIP)
         result=$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4)
@@ -31,11 +31,11 @@ case $info in
     PUBLICIP)
         result=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)
         ;;
-    ZONE)
-	result=$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone/ | sed -e 's/.$//')
+    ROLE)
+        result=$roleProfile
         ;;
-    ACCOUNT)
-        result=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document | grep -Eo '([[:digit:]]{12})')
+    STSCRED)
+        result=$(curl -s http://169.254.169.254/latest/meta-data/iam/security-credentials/$roleProfile)
         ;;
     STSTOKEN)
 	result=$(get_sts_value "Token")
@@ -46,9 +46,12 @@ case $info in
     S3SECRET)
         result=$(get_sts_value "SecretAccessKey")
         ;;
+    ZONE)
+	result=$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone/ | sed -e 's/.$//')
+        ;;
     *)
-        echo "Usage: $(basename $0)"
-        grep -A 1 ';;' get-aws-metadata.sh | grep "[A-Z]" | sed 's/)//' | grep -v grep 
+        echo "Usage: $(basename $0) <argument>"
+        grep -Eo '([A-Z.]+\))' $0 | sed 's/)//'
    	;;
 esac
 
