@@ -1,7 +1,12 @@
 Docker awscli
 =============
 
-A container to run awcli and s3cmd command. 
+A container to run awcli, s3cmd and other commonly used tools. See Dockerfile.
+To check AWS cli version
+
+```
+    docker run --rm  xueshanf/awscli aws --version
+```
 
 Examples
 ========
@@ -34,6 +39,7 @@ Copy data from s3 bucket to local file system:
 Registry an AWS instance to load balancer:
 
 Pass in AWS credential (not needed if the instances has IAM role based permission):
+
 ```
 sudo more /root/.aws/envvars
 AWS_ACCESS_KEY_ID=<key id>
