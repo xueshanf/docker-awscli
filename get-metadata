@@ -16,7 +16,7 @@ get_sts_value() {
 
 case $info in
     ACCOUNT)
-        result=$(url -s http://169.254.169.254/latest/dynamic/instance-identity/document | jq .accountId | sed 's/"//g')
+        result=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document | jq .accountId | sed 's/"//g')
         ;;
     HOSTNAME)
         result=$(curl -s http://169.254.169.254/latest/meta-data/public-hostname)
