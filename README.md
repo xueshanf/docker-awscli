@@ -8,7 +8,7 @@ To check AWS cli version
 
 ```
 docker run --rm  xueshanf/awscli aws --version
-docker run --rm  xueshanf/awscli 3cmd --version 
+docker run --rm  xueshanf/awscli s3cmd --version 
 ```
 
 Examples
@@ -47,8 +47,7 @@ Copy data from s3 bucket to local file system:
 core@n1 /usr/bin/docker run --rm -v /var/apps:/apps xueshanf/awscli:latest aws s3 cp s3://<bucket>/apps/nginx/ /apps/nginx
 ```
 
-Registry an AWS instance to load balancer:
-
+Register an AWS instance with a load balancer.
 Pass in AWS credential (not needed if the instances has IAM role based permission):
 
 ```
