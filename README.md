@@ -2,6 +2,7 @@ Docker awscli
 =============
 
 An AWS CLI toolbox in container. See Dockerfile.
+This repo triggers auto-build and push images to dockerhub.com/u/xueshanf/awscli.
 
 To check AWS cli version
 
@@ -18,7 +19,6 @@ Rebuld image. This will upgrade the package too:
 ```
 core@n1 docker build -t xueshanf/awscli:latest .
 ```
-This repo triggers auto-build and push images to dockerhub.com/u/xueshanf/awscli.
 
 Ready-made tools:
 
