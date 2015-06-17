@@ -10,9 +10,11 @@ RUN apk --update add \
       py-pip \
       jq \
       curl \
-      bash &&\
-      pip install --upgrade awscli s3cmd && \
+      bash \
+      pip install --upgrade awscli s3cmd \
       mkdir /root/.aws
+
+COPY get-metadata /usr/local/bin/get-metadata
 
 # Expose data volume
 VOLUME /apps

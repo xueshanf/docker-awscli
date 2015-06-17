@@ -1,33 +1,33 @@
 Docker awscli
 =============
 
-A container to run awcli, s3cmd and other commonly used tools. See Dockerfile.
+An AWS CLI toolbox in container. See Dockerfile.
+
 To check AWS cli version
 
 ```
-    docker run --rm  xueshanf/awscli aws --version
+docker run --rm  xueshanf/awscli aws --version
+docker run --rm  xueshanf/awscli 3cmd --version 
 ```
 
 Examples
 ========
 
-Rebuld image. This will upgrade the package:
+Rebuld image. This will upgrade the package too:
 
 ```
 core@n1 docker build -t xueshanf/awscli:latest .
 ```
 This repo triggers auto-build and push images to dockerhub.com/u/xueshanf/awscli.
 
-Check software versions:
+Readymade tools:
 
 ```
-core@n1 docker run --rm  xueshanf/awscli aws --version
-aws-cli/1.7.34 Python/2.7.9 Linux/4.0.3
+docker run --rm  xueshanf/awscli get-metadata help
 ```
+```
+docker run --rm  xueshanf/awscli get-metadata instanceid
 
-```
-core@n1 docker run --rm  xueshanf/awscli 3cmd --version
-s3cmd version 1.5.2
 ```
 
 Copy data from s3 bucket to local file system:
