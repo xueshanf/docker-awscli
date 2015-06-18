@@ -1,6 +1,5 @@
 #!/bin/bash
-#
-# Retrieve the instance_id, and iam-role
+# Taken from https://gist.github.com/xuwang/c42a77e9f833d263d040. Replaced some grep with jq.
 
 info=${1^^}
 meta_data_url=http://169.254.169.254/latest/meta-data/
