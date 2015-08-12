@@ -8,6 +8,7 @@ MAINTAINER Xueshan Feng <sfeng@stanford.edu>
 RUN apk --update add \
       groff \
       python \
+      python-magic \
       py-pip \
       jq \
       curl \
