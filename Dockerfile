@@ -6,6 +6,7 @@ FROM gliderlabs/alpine:3.1
 MAINTAINER Xueshan Feng <sfeng@stanford.edu>
 
 RUN apk --update add \
+      groff \
       python \
       py-pip \
       jq \
