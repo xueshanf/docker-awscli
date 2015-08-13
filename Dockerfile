@@ -5,7 +5,7 @@
 FROM gliderlabs/alpine:3.1
 MAINTAINER Xueshan Feng <sfeng@stanford.edu>
 
-RUN apk --update add 
+RUN apk --update add \ 
       less \
       groff \
       python \
