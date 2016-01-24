@@ -6,13 +6,13 @@ FROM gliderlabs/alpine:3.1
 MAINTAINER Xueshan Feng <sfeng@stanford.edu>
 
 RUN apk --update add \ 
+      bash \
+      curl \
       less \
       groff \
-      python \
-      py-pip \
       jq \
-      curl \
-      bash && \
+      python \
+      py-pip && \
       pip install --upgrade awscli s3cmd && \
       mkdir /root/.aws
 
