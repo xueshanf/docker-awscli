@@ -2,7 +2,7 @@
 # To run: docker run -it <namespace>/awscli
 # cd /apps; aws s3 command
 
-FROM gliderlabs/alpine:3.1
+FROM gliderlabs/alpine:3.3
 MAINTAINER Xueshan Feng <sfeng@stanford.edu>
 
 RUN apk --update add \ 
