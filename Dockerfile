@@ -1,4 +1,4 @@
-FROM gliderlabs/alpine:3.3
+FROM alpine:3.4
 MAINTAINER Xueshan Feng <sfeng@stanford.edu>
 
 RUN apk --update add \ 
