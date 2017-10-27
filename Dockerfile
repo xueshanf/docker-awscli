@@ -1,4 +1,4 @@
-FROM alpine:3.6
+FROM alpine:edge
 MAINTAINER Xueshan Feng <sfeng@stanford.edu>
 
 RUN apk update && apk add \ 
