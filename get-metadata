@@ -2,41 +2,69 @@
 # Taken from https://gist.github.com/xuwang/c42a77e9f833d263d040. Replaced some grep with jq.
 
 info=${1^^}
-meta_data_url=http://169.254.169.254/latest/meta-data/
-roleProfile=$(curl -s http://169.254.169.254/latest/meta-data/iam/info | grep -Eo 'instance-profile/([a-zA-Z.-]+)' | sed  's#instance-profile/##')
+meta_data_url=http://instance-data/latest/meta-data/
+roleProfile=$(curl -s http://instance-data/latest/meta-data/iam/info | jq -r '.InstanceProfileArn' | awk -F'/' '{print $NF}')
 
 # auth values
 get_sts_value() {
-  echo -n $(curl -s http://169.254.169.254/latest/meta-data/iam/security-credentials/$roleProfile/ \
+  echo -n $(curl -s http://instance-data/latest/meta-data/iam/security-credentials/$roleProfile/ \
       | grep "$1" \
       | awk -F":" '{print $2}' \
       | sed 's/^[ ^t]*//;s/"//g;s/,//g')
 }
 
+# exit 1 with an error message
+abort(){
+    echo $1
+    exit 1
+}
+
+get_asg_name(){
+    instance_id=$(curl -s http://instance-data/latest/meta-data/instance-id)
+    asg_name=$(aws autoscaling describe-auto-scaling-groups | \
+        jq -r ".[] | map(select(.Instances[].InstanceId | \
+        contains(\"$instance_id\"))) | .[].AutoScalingGroupName")
+    if [[  "$asg_name" ]]; then
+        return $asg_name
+    else
+            abort "$instance_id doesn't belong to autoscaling group."
+    fi
+}
 case $info in
+    ASG)
+        instance_id=$(curl -s http://instance-data/latest/meta-data/instance-id)
+        asg_name=$(aws autoscaling describe-auto-scaling-groups | \
+            jq -r ".[] | map(select(.Instances[].InstanceId | \
+            contains(\"$instance_id\"))) | .[].AutoScalingGroupName")
+        if [[  "$asg_name" ]]; then
+            result=$(asg_name)
+        else
+            abort "$instance_id doesn't belong to autoscaling group."
+        fi
+        ;;
     ACCOUNT)
-        result=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document | jq .accountId | sed 's/"//g')
+        result=$(curl -s http://instance-data/latest/dynamic/instance-identity/document | jq .accountId | sed 's/"//g')
         ;;
     HOSTNAME)
-        result=$(curl -s http://169.254.169.254/latest/meta-data/public-hostname)
+        result=$(curl -s http://instance-data/latest/meta-data/public-hostname)
         ;;
     ID|INSTANCEID)
-        result=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
+        result=$(curl -s http://instance-data/latest/meta-data/instance-id)
         ;;
     PRIVATEIP)
-        result=$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4)
+        result=$(curl -s http://instance-data/latest/meta-data/local-ipv4)
         ;;
     PUBLICIP)
-        result=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)
+        result=$(curl -s http://instance-data/latest/meta-data/public-ipv4)
         ;;
     ROLE)
         result=$roleProfile
         ;;
     STSCRED)
-        result=$(curl -s http://169.254.169.254/latest/meta-data/iam/security-credentials/$roleProfile)
+        result=$(curl -s http://instance-data/latest/meta-data/iam/security-credentials/$roleProfile)
         ;;
     STSTOKEN)
-	result=$(get_sts_value "Token")
+	    result=$(get_sts_value "Token")
         ;;
     STSKEY)
         result=$(get_sts_value "AccessKeyId")
@@ -45,7 +73,7 @@ case $info in
         result=$(get_sts_value "SecretAccessKey")
         ;;
     ZONE)
-	result=$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone/ | sed -e 's/.$//')
+	    result=$(curl -s http://instance-data/latest/meta-data/placement/availability-zone/ | sed -e 's/.$//')
         ;;
     *)
         echo "Usage: $(basename $0) <argument>"
