@@ -27,17 +27,21 @@ get_asg_name(){
     if [[  "$asg_name" ]]; then
         return $asg_name
     else
-            abort "$instance_id doesn't belong to autoscaling group."
+        abort "$instance_id doesn't belong to autoscaling group."
     fi
 }
 case $info in
-    ASG)
+    ASG_IPS)
         instance_id=$(curl -s http://instance-data/latest/meta-data/instance-id)
         asg_name=$(aws autoscaling describe-auto-scaling-groups | \
             jq -r ".[] | map(select(.Instances[].InstanceId | \
             contains(\"$instance_id\"))) | .[].AutoScalingGroupName")
         if [[  "$asg_name" ]]; then
-            result=$(asg_name)
+            asg_ips=$(aws ec2 describe-instances --instance-ids \ 
+                $(aws autoscaling describe-auto-scaling-groups --auto-scaling-group-name "$asg_name" | \ 
+                jq '.AutoScalingGroups[0].Instances[] | select(.LifecycleState  == "InService") | .InstanceId' | \
+                xargs) | jq -r ".Reservations[].Instances.NetworkInterfaces[].PrivateIpAddress")
+            result="$asg_name: $asg_ips"
         else
             abort "$instance_id doesn't belong to autoscaling group."
         fi
