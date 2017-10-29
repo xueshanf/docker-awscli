@@ -4,6 +4,7 @@
 info=${1^^}
 meta_data_url=http://instance-data/latest/meta-data/
 roleProfile=$(curl -s http://instance-data/latest/meta-data/iam/info | jq -r '.InstanceProfileArn' | awk -F'/' '{print $NF}')
+export AWS_DEFAULT_REGION=$(curl -s http://instance-data/latest/dynamic/instance-identity/document | jq --raw-output .region)
 
 # auth values
 get_sts_value() {
@@ -21,7 +22,7 @@ abort(){
 
 asg_ips(){
     instance_id=$(curl -s http://instance-data/latest/meta-data/instance-id)
-    asg_name=$(aws autoscaling $AWS_REGION describe-auto-scaling-groups | jq -r ".[] | map(select(.Instances[].Instance
+    asg_name=$(aws autoscaling describe-auto-scaling-groups | jq -r ".[] | map(select(.Instances[].Instance
         contains(\"$instance_id\"))) | .[].AutoScalingGroupName")
     if [[  "$asg_name" ]]; then
         asg_ips=$(aws ec2 describe-instances --instance-ids $(aws autoscaling describe-auto-scaling-groups --auto-scali
@@ -32,7 +33,7 @@ asg_ips(){
     fi
 }
 case $info in
-    ASG_IPS)
+    ASGIPS)
         asg_ips
         ;;
     ACCOUNT)
