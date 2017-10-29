@@ -19,32 +19,21 @@ abort(){
     exit 1
 }
 
-get_asg_name(){
+asg_ips(){
     instance_id=$(curl -s http://instance-data/latest/meta-data/instance-id)
-    asg_name=$(aws autoscaling describe-auto-scaling-groups | \
-        jq -r ".[] | map(select(.Instances[].InstanceId | \
+    asg_name=$(aws autoscaling $AWS_REGION describe-auto-scaling-groups | jq -r ".[] | map(select(.Instances[].Instance
         contains(\"$instance_id\"))) | .[].AutoScalingGroupName")
     if [[  "$asg_name" ]]; then
-        return $asg_name
+        asg_ips=$(aws ec2 describe-instances --instance-ids $(aws autoscaling describe-auto-scaling-groups --auto-scali
+            xargs) | jq -r ".Reservations[].Instances[].NetworkInterfaces[].Association.PublicIp")
+        result=$(echo $asg_name: $asg_ips)
     else
         abort "$instance_id doesn't belong to autoscaling group."
     fi
 }
 case $info in
     ASG_IPS)
-        instance_id=$(curl -s http://instance-data/latest/meta-data/instance-id)
-        asg_name=$(aws autoscaling describe-auto-scaling-groups | \
-            jq -r ".[] | map(select(.Instances[].InstanceId | \
-            contains(\"$instance_id\"))) | .[].AutoScalingGroupName")
-        if [[  "$asg_name" ]]; then
-            asg_ips=$(aws ec2 describe-instances --instance-ids \ 
-                $(aws autoscaling describe-auto-scaling-groups --auto-scaling-group-name "$asg_name" | \ 
-                jq '.AutoScalingGroups[0].Instances[] | select(.LifecycleState  == "InService") | .InstanceId' | \
-                xargs) | jq -r ".Reservations[].Instances.NetworkInterfaces[].PrivateIpAddress")
-            result="$asg_name: $asg_ips"
-        else
-            abort "$instance_id doesn't belong to autoscaling group."
-        fi
+        asg_ips
         ;;
     ACCOUNT)
         result=$(curl -s http://instance-data/latest/dynamic/instance-identity/document | jq .accountId | sed 's/"//g')
