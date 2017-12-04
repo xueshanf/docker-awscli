@@ -52,10 +52,10 @@ asg_private_ips(){
 }
 
 case $info in
-    ASGIPS|ASGIPS_PUB)
+    ASGIPS|ASGIPSPUB)
         asg_public_ips
         ;;
-    ASGIPS_PRV)
+    ASGIPSPRV)
         asg_private_ips
         ;;
     ACCOUNT)
