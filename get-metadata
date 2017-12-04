@@ -21,7 +21,7 @@ abort(){
 }
 
 # get ASG name and instance public IPs
-asg_ips(){
+asg_public_ips(){
     instance_id=$(curl -s http://instance-data/latest/meta-data/instance-id)
     asg_name=$(aws autoscaling describe-auto-scaling-groups \
         | jq -r ".[] | map(select(.Instances[].InstanceId | contains(\"$instance_id\"))) | .[].AutoScalingGroupName")
@@ -29,7 +29,22 @@ asg_ips(){
         asg_ips=$(aws ec2 describe-instances --instance-ids $(aws autoscaling describe-auto-scaling-groups --auto-scaling-group-name "$asg_name" \
             | jq '.AutoScalingGroups[0].Instances[] | select(.LifecycleState  == "InService") | .InstanceId' \
             | xargs) \
-            | jq -r ".Reservations[].Instances[].NetworkInterfaces[].Association.PublicIp")
+            | jq -r jq -r ".Reservations[].Instances[].PublicIpAddress")
+        result=$(echo $asg_name: $asg_ips)
+    else
+        abort "$instance_id doesn't belong to autoscaling group."
+    fi
+}
+
+asg_private_ips(){
+    instance_id=$(curl -s http://instance-data/latest/meta-data/instance-id)
+    asg_name=$(aws autoscaling describe-auto-scaling-groups \
+        | jq -r ".[] | map(select(.Instances[].InstanceId | contains(\"$instance_id\"))) | .[].AutoScalingGroupName")
+    if [[  "$asg_name" ]]; then
+        asg_ips=$(aws ec2 describe-instances --instance-ids $(aws autoscaling describe-auto-scaling-groups --auto-scaling-group-name "$asg_name" \
+            | jq '.AutoScalingGroups[0].Instances[] | select(.LifecycleState  == "InService") | .InstanceId' \
+            | xargs) \
+            | jq -r jq -r ".Reservations[].Instances[].PrivateIpAddress")
         result=$(echo $asg_name: $asg_ips)
     else
         abort "$instance_id doesn't belong to autoscaling group."
@@ -37,8 +52,11 @@ asg_ips(){
 }
 
 case $info in
-    ASGIPS)
-        asg_ips
+    ASGIPS|ASGIPS_PUB)
+        asg_public_ips
+        ;;
+    ASGIPS_PRV)
+        asg_private_ips
         ;;
     ACCOUNT)
         result=$(curl -s http://instance-data/latest/dynamic/instance-identity/document | jq .accountId | sed 's/"//g')
