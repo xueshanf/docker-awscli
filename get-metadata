@@ -29,7 +29,7 @@ asg_public_ips(){
         asg_ips=$(aws ec2 describe-instances --instance-ids $(aws autoscaling describe-auto-scaling-groups --auto-scaling-group-name "$asg_name" \
             | jq '.AutoScalingGroups[0].Instances[] | select(.LifecycleState  == "InService") | .InstanceId' \
             | xargs) \
-            | jq -r jq -r ".Reservations[].Instances[].PublicIpAddress")
+            | jq -r ".Reservations[].Instances[].PublicIpAddress")
         result=$(echo $asg_name: $asg_ips)
     else
         abort "$instance_id doesn't belong to autoscaling group."
@@ -44,7 +44,7 @@ asg_private_ips(){
         asg_ips=$(aws ec2 describe-instances --instance-ids $(aws autoscaling describe-auto-scaling-groups --auto-scaling-group-name "$asg_name" \
             | jq '.AutoScalingGroups[0].Instances[] | select(.LifecycleState  == "InService") | .InstanceId' \
             | xargs) \
-            | jq -r jq -r ".Reservations[].Instances[].PrivateIpAddress")
+            | jq -r ".Reservations[].Instances[].PrivateIpAddress")
         result=$(echo $asg_name: $asg_ips)
     else
         abort "$instance_id doesn't belong to autoscaling group."
