@@ -1,0 +1,7 @@
+.drone
+.drone.yml
+LICENSE
+README.md
+
+.dockerignore
+Dockerfile
