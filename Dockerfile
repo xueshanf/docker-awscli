@@ -1,7 +1,7 @@
 FROM alpine:edge
 MAINTAINER Xueshan Feng <sfeng@stanford.edu>
 
-RUN apk update && apk add \ 
+RUN apk --no-cache add \ 
       bash \
       curl \
       less \
