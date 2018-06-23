@@ -7,6 +7,7 @@ RUN apk --no-cache add \
       less \
       groff \
       jq \
+      git \
       python \
       py-pip \
       py2-pip && \
