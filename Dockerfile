@@ -1,4 +1,4 @@
-FROM alpine:3.9
+FROM alpine:3.10
 MAINTAINER Xueshan Feng <sfeng@stanford.edu>
 
 RUN apk --no-cache add \ 
