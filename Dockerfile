@@ -15,6 +15,3 @@ RUN apk --no-cache add \
       mkdir /root/.aws
 
 COPY get-metadata /usr/local/bin/get-metadata
-
-# Expose data volume
-VOLUME /apps
