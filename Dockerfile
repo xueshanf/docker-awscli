@@ -8,9 +8,9 @@ RUN apk --no-cache add \
       groff \
       jq \
       git \
-      python \
-      py-pip \
-      py2-pip && \
+      python3 \
+      py3-pip \
+      py-pip && \
       pip install --upgrade pip awscli s3cmd && \
       mkdir /root/.aws
 
