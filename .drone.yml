@@ -1,7 +1,0 @@
-image: xuwang/dind:latest
-script: 
-  - ./.drone/build.sh
-deploy:  
-  bash:
-    script:
-      - ./drone/deploy.sh
