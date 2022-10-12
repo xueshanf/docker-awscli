@@ -29,7 +29,5 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: |
-            - ${{ secrets.DOCKER_HUB_USERNAME }}/awscli:latest
-            - ${{ secrets.DOCKER_HUB_USERNAME }}/awscli:alpine-3.16
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/awscli:latest, ${{ secrets.DOCKER_HUB_USERNAME }}/awscli:alpine-3.16
           labels: ${{ steps.meta.outputs.labels }}
