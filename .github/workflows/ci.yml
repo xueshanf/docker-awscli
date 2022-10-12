@@ -21,11 +21,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@v3
-        with:
-          images: ${{ secrets.DOCKER_HUB_USERNAME }}/awscli
       - name: build and publish image
         id: docker_build
         uses: docker/build-push-action@v3
@@ -34,5 +29,7 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/awscli:latest
+          tags: |
+            - ${{ secrets.DOCKER_HUB_USERNAME }}/awscli:latest
+            - ${{ secrets.DOCKER_HUB_USERNAME }}/awscli:alpine-3.16
           labels: ${{ steps.meta.outputs.labels }}
